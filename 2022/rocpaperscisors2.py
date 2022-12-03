@@ -5,7 +5,7 @@ import re
 
 # usage message
 if len(argv) < 2:
-    print("Usage: python3 tictactoe.py $SESSION_COOKIE")
+    print("Usage: python3 rocpaperscisors.py $SESSION_COOKIE")
     exit(1)
 
 worth_matrix = {"A": 1, "B" : 2, "C" : 3, \
