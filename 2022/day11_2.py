@@ -37,58 +37,59 @@ class Monkey:
     def clear(self):
         self.items = []
 
-
-# read file input, split on each \n
-with open('.\\inputs\\day11.txt', "r") as f:    
-    lines = f.read().splitlines()
-
-
-# declare global 
-monkeys = []
-
-# read input
-for x in range(0, len(lines), 7):
-    # create list of starting items/worries
-    l1 = lines[x+1].split(":")[1]
-    items = [int(i) for i in l1.split(",")]
-
-    # put operation string (later eval()) in list
-    l2 = lines[x+2].split("=")[1]
-    if "*" in l2:
-        l2_split = l2.split("*")
-        op = "*"
-    else:
-        l2_split = l2.split("+")
-        op = "+"
-    op = l2_split[0].strip() + op + l2_split[1].strip()
-
-    # create function to test where to throw for each
-    div = int(lines[x+3].split("y")[1])
-    
-    monkeys.append(Monkey(items=items, op=op, test=div, \
-        tr=int(lines[x+4][-1]), fa=int(lines[x+5][-1])))
-
-modulo = prod([m.get_test() for m in monkeys])
-
-# for 10000 rounds
-for round in range(0, 10000):
-    # for each monkey in order
-    for n in range(0, len(monkeys)): 
-        # for each item the monkey holds in order
-        old_list = monkeys[n].get_items()
-        for i in range(0, len(old_list)):
-            monkeys[n].update_count()
-            op = monkeys[n].get_op()
-            old = old_list[i]
-
-            # evaluate operation with old set to current item worry
-            new = eval(op)
-            next_monkey, new_worry = monkeys[n].test_item(new, modulo)
-            monkeys[next_monkey].add_item(new_worry)
-        monkeys[n].clear()
-
-highest = [m.get_activity() for m in monkeys]
-highest.sort()
-print(highest[-1] * highest[-2])
+def main():
+    # read file input, split on each \n
+    with open('.\\inputs\\day11.txt', "r") as f:    
+        lines = f.read().splitlines()
 
 
+    # declare global 
+    monkeys = []
+
+    # read input
+    for x in range(0, len(lines), 7):
+        # create list of starting items/worries
+        l1 = lines[x+1].split(":")[1]
+        items = [int(i) for i in l1.split(",")]
+
+        # put operation string (later eval()) in list
+        l2 = lines[x+2].split("=")[1]
+        if "*" in l2:
+            l2_split = l2.split("*")
+            op = "*"
+        else:
+            l2_split = l2.split("+")
+            op = "+"
+        op = l2_split[0].strip() + op + l2_split[1].strip()
+
+        # create function to test where to throw for each
+        div = int(lines[x+3].split("y")[1])
+        
+        monkeys.append(Monkey(items=items, op=op, test=div, \
+            tr=int(lines[x+4][-1]), fa=int(lines[x+5][-1])))
+
+    modulo = prod([m.get_test() for m in monkeys])
+
+    # for 10000 rounds
+    for round in range(0, 10000):
+        # for each monkey in order
+        for n in range(0, len(monkeys)): 
+            # for each item the monkey holds in order
+            old_list = monkeys[n].get_items()
+            for i in range(0, len(old_list)):
+                monkeys[n].update_count()
+                op = monkeys[n].get_op()
+                old = old_list[i]
+
+                # evaluate operation with old set to current item worry
+                new = eval(op)
+                next_monkey, new_worry = monkeys[n].test_item(new, modulo)
+                monkeys[next_monkey].add_item(new_worry)
+            monkeys[n].clear()
+
+    highest = [m.get_activity() for m in monkeys]
+    highest.sort()
+    print(highest[-1] * highest[-2])
+
+if __name__ == "__main__":
+    main()
